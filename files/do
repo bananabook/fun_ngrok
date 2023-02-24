@@ -1,0 +1,15 @@
+# start ngrok
+ngrok start --all --config ./ngrok.yml > ngrok.log &
+
+# wait for the ngrok.log file to be populated
+sleep 1
+
+# we pick the important info about the ssh server from the log file and put it in different files
+# 'info': will contain all information
+# 'buffer': will contain the info in a form, that can be used in an ssh config
+# 'qr': is a qr encoding of the info in buffer
+# 'out': contains all the files concatenated
+grep "started tunnel" ngrok.log|grep -o "addr=.*$" > info
+grep localhost:22 info|sed 's:.*tcp\://\(.*\)\:\([0-9]*\):Host fun\n\thostname \1\n\tuser user\n\tport \2:g' > buffer
+qrencode -r buffer -t ASCII -m 0 |sed 's:#:█:g' > qr
+cat info buffer qr > out
