@@ -15,6 +15,7 @@ COPY files/do /home/user
 COPY files/ngrok.yml /home/user
 RUN apt install vim qrencode -y
 COPY files/id_rsa.pub /home/user/.ssh/authorized_keys
+RUN chown user: /home/user/.ssh/authorized_keys
 COPY entry.sh /root
 RUN chmod u+x /root/entry.sh
 ENTRYPOINT /root/entry.sh
